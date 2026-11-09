@@ -1,0 +1,74 @@
+:root {
+  /* palette from the design sheet */
+  --bg: #1a0d20;
+  --primary: #680f3d;
+  --accent: #ff3f8e;
+  --surface: #fde8d9;
+  --gold: #ffc63d;
+  --secondary: #d6b4e0;
+  --ink: #2a1230;
+  /* accessible variants (WCAG AA, checked with scratchpad/contrast.mjs):
+     --accent is for decoration + text on dark bg (5.7:1).
+     --accent-strong is the fill behind white text (5.5:1).
+     --muted is secondary text on parchment (6.4:1). */
+  --accent-strong: #c81e68;
+  --accent-shadow: #8e1348;
+  --muted: #6b4a5a;
+
+  /* pixel UI: hard edges, zero-blur shadows */
+  --px: 3px;
+  --font-display: 'Pixelify Sans', 'Pixel Operator', monospace; /* swap in Pixel Operator when self-hosted */
+  --font-ui: 'Inter', system-ui, sans-serif;
+
+  --phone-w: 390px;
+  --phone-h: 844px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; }
+body {
+  background: radial-gradient(circle at 50% 30%, #3a1646, var(--bg) 70%);
+  color: var(--surface);
+  font-family: var(--font-ui);
+  display: grid;
+  place-items: center;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+img, .pixelated { image-rendering: pixelated; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+
+/* phone frame: centered on desktop, full-bleed on a real phone */
+.phone {
+  position: relative;
+  width: var(--phone-w);
+  height: var(--phone-h);
+  max-height: 100vh;
+  background: var(--bg);
+  border: 6px solid #0b0510;
+  border-radius: 44px;
+  box-shadow: 0 0 0 3px var(--primary), 0 24px 60px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.phone::before { /* notch */
+  content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  width: 96px; height: 24px; background: #000; border-radius: 14px; z-index: 50;
+}
+@media (max-width: 430px) {
+  body { display: block; }
+  .phone { width: 100%; height: 100dvh; max-height: none; border: 0; border-radius: 0; box-shadow: none; }
+  .phone::before { display: none; }
+}
+.screen { flex: 1; min-height: 0; display: flex; flex-direction: column; position: relative; overflow-y: auto; padding-top: 44px; }
+.screen::-webkit-scrollbar { display: none; }
+.screen > * { flex-shrink: 0; }
+
+/* ---------- accessibility ---------- */
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+button, a { min-height: 44px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
